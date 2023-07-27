@@ -46,7 +46,7 @@ spec:
       name: mongodb-volume
     spec:
       accessModes: [ "ReadWriteOnce" ]
-      storageClassName: "ebs-sc"
+      storageClassName: "ebs-dynamic-sc"
       resources:
         requests:
           storage: 1Gi
