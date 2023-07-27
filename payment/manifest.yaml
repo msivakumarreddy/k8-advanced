@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: payment
+  namespace: roboshop
+  labels:
+    app: payment
+    tier: app
+    project: roboshop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: payment
+      tier: app
+      project: roboshop
+  template:
+    metadata:
+      labels:
+        app: payment
+        tier: app
+        project: roboshop
+    spec:
+      containers:
+      - name: payment
+        image: techworldwithsiva/payment:k8
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: payment
+  namespace: roboshop
+  labels:
+    app: payment
+    tier: app
+    project: roboshop
+spec:
+  selector:
+  # you should provide pod labels here
+    app: payment
+    tier: app
+    project: roboshop
+  ports:
+  - name: payment-port
+    protocol: TCP
+    # service port
+    port: 8080
+    # pod port
+    targetPort: 8080
