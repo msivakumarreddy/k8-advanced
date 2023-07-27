@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cart-config
+data:
+  REDIS_HOST: redis
+  CATALOGUE_HOST: catalogue
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart
+  namespace: roboshop
+  labels:
+    app: cart
+    tier: app
+    project: roboshop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cart
+      tier: app
+      project: roboshop
+  template:
+    metadata:
+      labels:
+        app: cart
+        tier: app
+        project: roboshop
+    spec:
+      containers:
+      - name: cart
+        image: techworldwithsiva/cart:k8
+        envFrom:
+        - configMapRef:
+            name: cart-config
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart
+  namespace: roboshop
+  labels:
+    app: cart
+    tier: app
+    project: roboshop
+spec:
+  selector:
+  # you should provide pod labels here
+    app: cart
+    tier: app
+    project: roboshop
+  ports:
+  - name: cart-port
+    protocol: TCP
+    # service port
+    port: 8080
+    # pod port
+    targetPort: 8080
